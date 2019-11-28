@@ -8,6 +8,7 @@ import androidx.compose.Composable
 import androidx.compose.unaryPlus
 import androidx.ui.core.*
 import androidx.ui.foundation.DrawImage
+import androidx.ui.foundation.VerticalScroller
 import androidx.ui.foundation.shape.border.Border
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.graphics.Color
@@ -23,6 +24,9 @@ import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontWeight
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.vectormath64.cross
+import java.util.stream.IntStream.range
+
+val mediumGray = Color(0xFFEAEBEC)
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             MaterialTheme {
                 Surface {
-                    SettingsRow()
+                    HomePageScreen()
                 }
             }
         }
@@ -38,77 +42,94 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun HomePageScreen() {
+    VerticalScroller {
+        Column(
+            crossAxisSize = LayoutSize.Expand,
+            modifier = Spacing(24.dp)
+        ) {
+            SettingsRow()
+            NewsLetterRow()
+        }
+    }
 }
 
 @Composable
 fun SettingsRow() {
     val settingsBannerImage = +imageResource(R.drawable.ic_banner1)
     val exitImage = +imageResource(R.drawable.ic_error)
-    val mediumGray = Color(0xFFEAEBEC)
-    Column(
-        crossAxisSize = LayoutSize.Expand,
-        modifier = Spacing(24.dp)
+
+    Text(
+        text = "Settings",
+        style = TextStyle(
+            fontWeight = FontWeight.Bold,
+            fontSize = 22.sp
+        ),
+        modifier = Spacing(0.dp, 0.dp, 0.dp, 8.dp)
+    )
+    Row(
+        mainAxisAlignment = MainAxisAlignment.SpaceBetween,
+        mainAxisSize = LayoutSize.Expand,
+        crossAxisAlignment = CrossAxisAlignment.Center
+    ) {
+        Text(text = "You are not a subscriber", style = +themeTextStyle { body2 })
+        Button(
+            text = "See options",
+            onClick = {
+
+            },
+            style = ContainedButtonStyle(
+                color = mediumGray,
+                shape = RoundedCornerShape(8.dp)
+            )
+        )
+    }
+
+    Container(expanded = true, height = 180.dp, modifier = Spacing(0.dp, 24.dp, 0.dp, 24.dp)) {
+        Clip(shape = RoundedCornerShape(8.dp)) {
+            DrawImage(image = settingsBannerImage)
+        }
+    }
+
+}
+
+@Composable
+fun NewsLetterRow() {
+    Row(
+        mainAxisAlignment = MainAxisAlignment.SpaceBetween,
+        mainAxisSize = LayoutSize.Expand,
+        crossAxisAlignment = CrossAxisAlignment.Center,
+        modifier = Spacing(0.dp, 0.dp, 0.dp, 16.dp)
     ) {
         Text(
-            text = "Settings",
+            text = "My Newsletter",
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 fontSize = 22.sp
             ),
             modifier = Spacing(0.dp, 0.dp, 0.dp, 8.dp)
         )
-        Row(
-            mainAxisAlignment = MainAxisAlignment.SpaceBetween,
-            mainAxisSize = LayoutSize.Expand,
-            crossAxisAlignment = CrossAxisAlignment.Center
-        ) {
-            Text(text = "You are not a subscriber", style = +themeTextStyle { body2 })
-            Button(
-                text = "See options",
-                onClick = {
+        Button(
+            text = "Show catalogue",
+            onClick = {
 
-                },
-                style = ContainedButtonStyle(
-                    color = mediumGray,
-                    shape = RoundedCornerShape(8.dp)
-                )
+            },
+            style = ContainedButtonStyle(
+                color = mediumGray,
+                shape = RoundedCornerShape(8.dp)
             )
+        )
+    }
+    Column {
+        for (i in 0..5) {
+            CardNewsLetter()
         }
+    }
+}
 
-        Container(expanded = true, height = 180.dp, modifier = Spacing(0.dp, 36.dp, 0.dp, 36.dp)) {
-            Clip(shape = RoundedCornerShape(8.dp)) {
-                DrawImage(image = settingsBannerImage)
-            }
-        }
-
-        Row(
-            mainAxisAlignment = MainAxisAlignment.SpaceBetween,
-            mainAxisSize = LayoutSize.Expand,
-            crossAxisAlignment = CrossAxisAlignment.Center,
-            modifier = Spacing(0.dp, 0.dp, 0.dp, 16.dp)
-        ) {
-            Text(
-                text = "My Newsletter",
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp
-                ),
-                modifier = Spacing(0.dp, 0.dp, 0.dp, 8.dp)
-            )
-            Button(
-                text = "Show catalogue",
-                onClick = {
-
-                },
-                style = ContainedButtonStyle(
-                    color = mediumGray,
-                    shape = RoundedCornerShape(8.dp)
-                )
-            )
-        }
-
+@Composable
+fun CardNewsLetter() {
+    Padding(0.dp, 0.dp, 0.dp, 16.dp) {
         Card(
             shape = RoundedCornerShape(4.dp),
             elevation = 1.2.dp
@@ -119,7 +140,7 @@ fun SettingsRow() {
                         mainAxisAlignment = MainAxisAlignment.SpaceBetween,
                         mainAxisSize = LayoutSize.Expand,
                         crossAxisAlignment = CrossAxisAlignment.Center,
-                        modifier = Spacing(0.dp,0.dp,0.dp,12.dp)
+                        modifier = Spacing(0.dp, 0.dp, 0.dp, 12.dp)
                     ) {
                         Text(
                             text = "Breaking News Alerts",
@@ -154,7 +175,7 @@ fun VectorImage(@DrawableRes id: Int, tint: Color = Color.Transparent) {
 fun DefaultPreview() {
     MaterialTheme {
         Surface {
-            SettingsRow()
+            HomePageScreen()
         }
     }
 }
